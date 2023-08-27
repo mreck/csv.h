@@ -8,6 +8,7 @@
 #define TEXT_1 "1,2,3\n4,5,6\n7,8,9"
 #define TEXT_2 "a,b,c\n 1, 2,3\n4,5 , 6 "
 #define TEXT_3 "a,b\n1,1.2\n2,2.4"
+#define TEXT_4 "a,b\n\"1,2\",3\n4,\"5,6\"\n\"7\"\",8\",9"
 
 void print_result(int res, int len, char *start)
 {
@@ -71,6 +72,18 @@ int main()
         } while(1);
     }
 
+    {
+        printf("\n[*] Parsing:\n\n%s\n\n", TEXT_4);
+        csv_parser_init(&p, TEXT_4, strlen(TEXT_4), ',', flags);
+
+        printf("Skipping first row\n");
+        csv_parser_skip_row(&p);
+
+        do {
+            n = csv_parser_next(&p, &start, &len);
+            print_result(n, len, start);
+        } while(n != CSV_END_OF_STRING);
+    }
 
     return 0;
 }

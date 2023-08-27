@@ -35,6 +35,8 @@ void csv_parser_init(CSV_Parser *parser, char *start, unsigned long length, char
 
 int csv_parser_next(CSV_Parser *parser, char **start, int *length)
 {
+    int q_count = 0;
+
     *length = 0;
 
     if (parser->p >= parser->end || parser->p[0] == '\0') {
@@ -50,8 +52,11 @@ int csv_parser_next(CSV_Parser *parser, char **start, int *length)
 
     while (parser->p < parser->end) {
         if (parser->p[0] == '\0') break;
-        if (parser->p[0] == parser->sep) break;
-        if (parser->p[0] == '\n') break;
+        if ((q_count + 1) % 2) {
+            if (parser->p[0] == parser->sep) break;
+            if (parser->p[0] == '\n') break;
+        }
+        if (parser->p[0] == '"') ++q_count;
         ++parser->p;
     }
 
